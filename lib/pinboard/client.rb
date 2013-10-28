@@ -110,6 +110,27 @@ module Pinboard
       posts.map { |p| Post.new(Util.symbolize_keys(p)) }
     end
 
+    # Returns one or more posts on a single day matching the arguments.
+    # If no date or url is given, date of most recent bookmark will be used.
+    #
+    # @param <Hash> params the options to filter current posts
+    # @option params [String] :tag filter by up to three tags
+    # @option params [String] :dt return results bookmarked on this day
+    # @option params [String] :url return bookmark for this URL
+    #
+    # @return [Array<Post>] the list of recent posts
+    def get(params={})
+      options = create_params(params)
+      posts = self.class.get('/posts/get', options)['posts']['post']
+      posts = [] if posts.nil?
+      if posts.is_a? Hash # Which is the case when there's only one result
+        posts = [posts]
+      else
+        posts = [*posts]
+      end
+      posts.map { |p| Post.new(Util.symbolize_keys(p)) }
+    end
+
     # Returns a list of dates with the number of posts at each date
     #
     # @param [String] tag Filter by up to three tags
