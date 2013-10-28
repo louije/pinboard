@@ -29,6 +29,17 @@ module Pinboard
       end
     end
 
+    # Return the API token
+    #
+    # Together with the username, can be used to log in without
+    # having to save the password.
+    #
+    # @return [String] the user's API token
+    def api_token
+      options = create_params({})
+      self.class.get('/user/api_token/', options)['result']
+    end
+
     # Returns all bookmarks in the user's account.
     #
     # @return [Array<Post>] the list of bookmarks
